@@ -234,6 +234,11 @@ loadHistory();
       }
 
       waiting.textContent = "JARVIS: " + data.reply;
+
+const fala = new SpeechSynthesisUtterance(data.reply);
+fala.lang = "pt-BR";
+fala.rate = 1;
+speechSynthesis.speak(fala);
       history.push({ role: "assistant", content: data.reply });
     } catch (error) {
       waiting.textContent =
