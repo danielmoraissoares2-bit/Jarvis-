@@ -1,256 +1,277 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#07111f">
-<title>JARVIS | Assistente pessoal</title>
+<meta name="theme-color" content="#080807">
+<title>J.A.R.V.I.S. | Assistente</title>
 <style>
-:root{color-scheme:dark;--bg:#07111f;--panel:#101f32;--line:#24415b;--cyan:#69e1ff;--text:#eaf6ff;--muted:#9db5c9}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#14304a,var(--bg) 55%);font:16px system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);min-height:100vh}
-main{max-width:760px;margin:auto;padding:20px 14px 40px}.head{text-align:center;padding:18px 0 20px}.orb{width:88px;height:88px;border:2px solid var(--cyan);border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;box-shadow:0 0 28px #37c9ff33,inset 0 0 22px #37c9ff22;color:var(--cyan);font-size:31px}.eyebrow{letter-spacing:.25em;font-size:11px;color:var(--cyan)}h1{margin:6px 0;font-size:28px;letter-spacing:.12em}p{color:var(--muted);line-height:1.5}.panel{background:#0d1a2beF;border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.status{font-size:13px;color:var(--cyan);min-height:20px}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button,.send,select{border:1px solid var(--line);background:#142a40;color:var(--text);border-radius:12px;padding:11px 13px;font:inherit}.controls button.primary,.send{background:#0e7899;border-color:#35c8ef;color:white}.controls button:active,.send:active{transform:scale(.98)}label{display:block;color:var(--muted);font-size:13px;margin:12px 0 6px}select,input{width:100%;border:1px solid var(--line);background:#091523;color:var(--text);border-radius:10px;padding:12px;font:inherit}#log{height:290px;overflow:auto;display:flex;flex-direction:column;gap:9px}.bubble{padding:10px 12px;border-radius:12px;max-width:92%;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45}.user{align-self:flex-end;background:#123c54}.jarvis{align-self:flex-start;background:#17283b;border:1px solid #28435a}.inputrow{display:flex;gap:8px;margin-top:10px}.inputrow input{min-width:0}.inputrow button{flex-shrink:0}.small{font-size:12px}.danger{background:#3a1d28!important}.foot{font-size:12px;text-align:center;color:var(--muted);padding:8px}a{color:var(--cyan)}
+:root{color-scheme:dark;--gold:#d6ad55;--bright:#ffe2a0;--bg:#080807;--panel:#11110f;--line:#514326;--text:#f5eddb;--muted:#a99b7b}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 15%,#302516 0,#11100c 35%,#070707 75%);color:var(--text);font:15px system-ui,sans-serif;min-height:100vh}
+main{width:min(100%,760px);margin:auto;padding:20px 14px 28px}
+header{text-align:center;padding:12px 0 20px}
+.tag{font-size:10px;letter-spacing:.35em;color:var(--gold)}
+h1{font-size:29px;letter-spacing:.2em;margin:12px 0 4px}
+.sub{font-size:12px;color:var(--muted)}
+.core{width:154px;height:154px;border:1px solid var(--gold);border-radius:50%;margin:22px auto;display:grid;place-items:center;position:relative;box-shadow:0 0 22px #d6ad5530,inset 0 0 24px #d6ad5518}
+.core:before,.core:after{content:"";position:absolute;border:1px solid #94743c;border-radius:50%;inset:10px}
+.core:after{inset:24px;border-style:dashed;animation:spin 24s linear infinite}
+.core span{font-size:35px;color:var(--bright);text-shadow:0 0 20px #d6ad55}
+@keyframes spin{to{transform:rotate(360deg)}}
+.panel{background:#11110feF;border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.status{font-size:12px;color:var(--gold);min-height:18px}
+#log{height:clamp(220px,36vh,340px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px 0}
+.bubble{padding:11px 13px;border-radius:12px;max-width:92%;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}
+.user{align-self:flex-end;background:#3a2c17;border:1px solid #796034}
+.jarvis{align-self:flex-start;background:#191711;border:1px solid #44371f}
+.inputrow,.controls{display:flex;gap:8px}
+.inputrow input{flex:1;min-width:0}
+input,select,button{font:inherit;border-radius:10px}
+input,select{background:#090908;border:1px solid var(--line);color:var(--text);padding:12px;width:100%}
+button{padding:11px 13px;border:1px solid var(--line);background:#201b12;color:var(--bright);cursor:pointer}
+button.primary{background:linear-gradient(135deg,#d6ad55,#87652c);color:#100d06;border-color:var(--bright);font-weight:700}
+button:disabled{opacity:.5}
+.controls{flex-wrap:wrap;margin-top:12px}
+.controls button{flex:1}
+label{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px}
+details{color:var(--muted);font-size:13px}
+summary{cursor:pointer;color:var(--gold)}
+.small{font-size:11px;color:var(--muted);line-height:1.5}
+.foot{text-align:center;color:#796d53;font-size:10px;letter-spacing:.12em;padding:16px}
 </style>
 </head>
 <body>
 <main>
-<header class="head">
-<div class="orb">J</div><div class="eyebrow">ASSISTENTE PESSOAL</div><h1>J.A.R.V.I.S.</h1>
-<p>Interface experimental • voz do dispositivo • memória local</p>
+<header>
+<div class="tag">SISTEMA DE INTELIGÊNCIA PESSOAL</div>
+<div class="core"><span>J</span></div>
+<div class="tag">ONLINE • INTERFACE EXPERIMENTAL</div>
+<h1>J.A.R.V.I.S.</h1>
+<div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
 </header>
+
 <section class="panel">
-<div id="status" class="status" role="status">Sistema inicializado. Aguardando comando.</div>
-<div class="controls" style="margin-top:12px">
-<button class="primary" id="listen">🎙️ Falar</button><button id="stop">Parar voz</button><button id="search">Pesquisar</button><button id="clear" class="danger">Apagar histórico</button>
-</div>
-<label for="voice">Voz disponível no dispositivo</label><select id="voice"><option>Carregando vozes...</option></select>
-<label for="rate">Velocidade da fala</label><input id="rate" type="range" min="0.7" max="1.25" step="0.05" value="0.95">
-</section>
-<section class="panel">
+<div id="status" class="status">Sistema inicializado. Aguardando comando.</div>
 <div id="log" aria-live="polite"></div>
-<div class="inputrow"><input id="message" placeholder="Digite um comando..." autocomplete="off"><button class="send" id="send">Enviar</button></div>
-<p class="small">Experimente: “que horas são?”, “pesquisar sobre Saturno”, “abrir YouTube” ou “ajuda”.</p>
-</section>
-<section class="panel">
-<strong>Limites desta versão</strong>
-<p class="small">Este protótipo não usa um modelo de IA ainda. Ele responde a comandos básicos, faz buscas no Google e guarda o histórico neste navegador. O microfone depende do navegador, da conexão e da permissão concedida. Para proteger tua privacidade, o histórico fica no armazenamento local do site.</p>
-</section>
-<div class="foot">JARVIS caseiro • protótipo gratuito</div>
-</main>
-<script>
-const $=id=>document.getElementById(id);
-const log=$('log'), statusBox=$('status');
-let recognition=null, listening=false;
-function setStatus(t){statusBox.textContent=t}
-function addBubble(text,who,save=true){const d=document.createElement('div');d.className='bubble '+who;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight;if(save)saveHistory();return d}
-function saveHistory(){try{localStorage.setItem('jarvis-history-v1',JSON.stringify([...log.querySelectorAll('.bubble')].map(x=>({text:x.textContent,who:x.classList.contains('user')?'user':'jarvis'})).slice(-100)))}catch(e){setStatus('Não foi possível salvar o histórico neste navegador.')}}
-function loadHistory(){try{const data=JSON.parse(localStorage.getItem('jarvis-history-v1')||'[]');data.forEach(x=>addBubble(x.text,x.who,false))}catch(e){}if(!log.children.length)addBubble('Olá. Sou teu protótipo Jarvis. Ainda não tenho um modelo de IA conectado, mas posso executar alguns comandos básicos. Digita “ajuda” para ver exemplos.','jarvis')}
-function speak(text){if(!('speechSynthesis'in window)){setStatus('Este navegador não oferece síntese de voz.');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=Number($('rate').value);const voices=speechSynthesis.getVoices();const chosen=voices[Number($('voice').value)];if(chosen)u.voice=chosen;speechSynthesis.speak(u)}
-function refreshVoices(){const sel=$('voice');const old=sel.value;const voices=speechSynthesis.getVoices();sel.innerHTML='';const pt=voices.map((v,i)=>({v,i})).filter(x=>x.v.lang.toLowerCase().startsWith('pt'));const arr=pt.length?pt:voices.map((v,i)=>({v,i}));if(!arr.length){sel.add(new Option('Voz padrão do dispositivo',''));return}arr.forEach(x=>sel.add(new Option(x.v.name+' ('+x.v.lang+')',String(x.i))));if([...sel.options].some(o=>o.value===old))sel.value=old}
-if('speechSynthesis'in window){refreshVoices();speechSynthesis.onvoiceschanged=refreshVoices}
-function searchWeb(q){const url='https://www.google.com/search?q='+encodeURIComponent(q);window.open(url,'_blank','noopener');}
-function reply(text,voice=true){addBubble(text,'jarvis');setStatus('Resposta pronta.');if(voice)speak(text)}
-function handle(raw){const t=raw.trim();if(!t)return;addBubble(t,'user');$('message').value='';const s=t.toLocaleLowerCase('pt-BR');
-if(/\b(ajuda|comandos|o que você faz)\b/.test(s)){reply('Nesta versão posso dizer as horas, abrir algumas páginas, pesquisar no Google e guardar este histórico. Ainda não estou conectado a uma inteligência artificial.');return}
-if(/\b(que horas|hora agora|horas são)\b/.test(s)){reply('Agora são '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'.');return}
-if(/\b(que dia|data de hoje|data é hoje)\b/.test(s)){reply('Hoje é '+new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'.');return}
-if(/\b(pesquisar|pesquisa|procure|buscar|busque)\b/.test(s)){const q=t.replace(/^(jarvis[, ]*)?(pesquisar|pesquisa|procure|buscar|busque)( por| sobre)?/i,'').trim();if(!q){reply('Diz o que devo pesquisar, por exemplo: pesquisar sobre Marte.');return}reply('Abrindo uma pesquisa na internet sobre '+q+'.');searchWeb(q);return}
-if(/\b(abrir|abre)\b/.test(s)){let url='';if(s.includes('youtube'))url='https://m.youtube.com';else if(s.includes('google'))url='https://www.google.com';else if(s.includes('wikipedia'))url='https://pt.wikipedia.org';else if(s.includes('spotify'))url='https://open.spotify.com';else if(s.includes('whatsapp'))url='https://web.whatsapp.com';if(url){reply('Vou abrir a página solicitada.');window.open(url,'_blank','noopener');return}reply('Ainda só consigo abrir YouTube, Google, Wikipédia, Spotify e WhatsApp Web por comando.');return}
-if(/\b(para|pare|silêncio|cala)\b/.test(s)){speechSynthesis.cancel();reply('Voz interrompida.',false);return}
-reply('Ainda não sei responder isso sozinho porque meu modelo de inteligência artificial não está conectado. Posso pesquisar no Google se escreveres “pesquisar sobre” e o assunto.');}
-$('send').addEventListener('click',()=>handle($('message').value));
-$('message').addEventListener('keydown',e=>{if(e.key==='Enter')handle($('message').value)});
-$('listen').addEventListener('click',()=>{
- const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){setStatus('Reconhecimento de voz não disponível neste navegador. Usa o campo de texto ou testa no Chrome com internet.');return}
- if(recognition){try{recognition.stop()}catch(e){}}
- recognition=new SR();recognition.lang='pt-BR';recognition.interimResults=false;recognition.maxAlternatives=1;
- recognition.onstart=()=>{listening=true;setStatus('Estou ouvindo. Fala agora...')};
- recognition.onresult=e=>{const heard=e.results[0][0].transcript;setStatus('Ouvi: '+heard);handle(heard)};
- recognition.onerror=e=>setStatus('Microfone: '+e.error+'. Confere a permissão e tenta de novo.');
- recognition.onend=()=>{listening=false;if(statusBox.textContent==='Estou ouvindo. Fala agora...')setStatus('Escuta encerrada.')};
- try{recognition.start()}catch(e){setStatus('Não consegui iniciar o microfone. Fecha e tenta novamente.')}
-});
-$('stop').addEventListener('click',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();if(recognition)try{recognition.stop()}catch(e){}setStatus('Voz interrompida.')});
-$('search').addEventListener('click',()=>{const q=prompt('O que devo pesquisar?');if(q&&q.trim()){addBubble('Pesquisar: '+q,'user');reply('Abrindo uma pesquisa sobre '+q+'.');searchWeb(q.trim())}});
-$('clear').addEventListener('click',()=>{if(confirm('Apagar todo o histórico salvo neste navegador?')){log.innerHTML='';localStorage.removeItem('jarvis-history-v1');addBubble('Histórico apagado.','jarvis');setStatus('Histórico local apagado.')}});
-loadHistory();
-</script> 
-<!-- JARVIS AI CHAT -->
-<style>
-  #jarvis-ai-button {
-    position: fixed;
-    right: 16px;
-    bottom: 16px;
-    z-index: 9999;
-    padding: 14px 18px;
-    border: 1px solid #00eaff;
-    border-radius: 30px;
-    background: #071525;
-    color: #00eaff;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  #jarvis-ai-panel {
-    display: none;
-    position: fixed;
-    right: 12px;
-    bottom: 76px;
-    z-index: 9999;
-    width: min(350px, calc(100vw - 24px));
-    height: 420px;
-    max-height: 70vh;
-    background: #071525;
-    color: #eafaff;
-    border: 1px solid #00eaff;
-    border-radius: 16px;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-  }
-
-  #jarvis-ai-messages {
-    height: calc(100% - 112px);
-    overflow-y: auto;
-    padding: 12px;
-    overflow-wrap: anywhere;
-  }
-
-  .jarvis-ai-message {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    background: #10283c;
-    white-space: pre-wrap;
-  }
-
-  #jarvis-ai-controls {
-    display: flex;
-    gap: 6px;
-    padding: 8px;
-  }
-
-  #jarvis-ai-input {
-    flex: 1;
-    min-width: 0;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #00eaff;
-    background: #fff;
-    color: #111;
-  }
-
-  #jarvis-ai-send {
-    padding: 10px;
-    border: 0;
-    border-radius: 8px;
-    background: #00cfe8;
-    color: #00121a;
-    font-weight: bold;
-  }
-</style>
-
-<button id="jarvis-ai-button">JARVIS IA</button>
-
-<div id="jarvis-ai-panel">
-  <div style="padding:12px;border-bottom:1px solid #00eaff">
-    <strong>JARVIS — Assistente IA</strong>
-    <button id="jarvis-ai-close"
-      style="float:right;background:none;color:white;border:0;font-size:18px">
-      X
-    </button>
-  </div>
-
-  <div id="jarvis-ai-messages">
-    <div class="jarvis-ai-message">
-      Olá! Sou o Jarvis. Pode mandar sua mensagem.
-    </div>
-  </div>
-
-  <form id="jarvis-ai-controls">
-    <input id="jarvis-ai-input"
-      placeholder="Digite sua mensagem..."
-      autocomplete="off" required />
-    <button id="jarvis-ai-send" type="submit">Enviar</button>
-  </form>
+<form id="form" class="inputrow">
+<input id="message" placeholder="Fale comigo, senhor..." autocomplete="off" required>
+<button class="primary" id="send" type="submit">Enviar</button>
+</form>
+<div class="controls">
+<button class="primary" id="listen">🎙 Falar</button>
+<button id="stop">Parar voz</button>
+<button id="search">Pesquisar</button>
+<button id="clear">Limpar conversa</button>
 </div>
+</section>
+
+<section class="panel">
+<details>
+<summary>Configurações de voz</summary>
+<label for="voice">Voz do dispositivo</label>
+<select id="voice"></select>
+<label for="rate">Velocidade da fala</label>
+<input id="rate" type="range" min="0.7" max="1.25" step="0.05" value="0.95">
+</details>
+<p class="small">A voz depende dos recursos disponíveis no navegador e no dispositivo. A conversa com IA usa a conexão configurada no servidor.</p>
+</section>
+<div class="foot">JARVIS • SISTEMA PESSOAL</div>
+</main>
 
 <script>
 (() => {
-  const API = "https://jarvis-cerebro.danielmoraissoares2.workers.dev/";
+const API="https://jarvis-cerebro.danielmoraissoares2.workers.dev/";
+const $=id=>document.getElementById(id);
+const log=$("log"),status=$("status"),form=$("form"),input=$("message"),send=$("send");
+let recognition=null;
+let history=[];
+let busy=false;
 
-  const button = document.getElementById("jarvis-ai-button");
-  const panel = document.getElementById("jarvis-ai-panel");
-  const close = document.getElementById("jarvis-ai-close");
-  const form = document.getElementById("jarvis-ai-controls");
-  const input = document.getElementById("jarvis-ai-input");
-  const messages = document.getElementById("jarvis-ai-messages");
-  const send = document.getElementById("jarvis-ai-send");
-  const history = [];
+function setStatus(t){status.textContent=t}
 
-  button.onclick = () => {
-    panel.style.display = "block";
-    input.focus();
-  };
+function save(){
+ try{
+ localStorage.setItem("jarvis-history-v1",JSON.stringify(
+ [...log.querySelectorAll(".bubble")].map(x=>({
+ text:x.textContent,who:x.classList.contains("user")?"user":"jarvis"
+ })).slice(-80)));
+ }catch(e){}
+}
 
-  close.onclick = () => {
-    panel.style.display = "none";
-  };
+function bubble(text,who,saveIt=true){
+ const d=document.createElement("div");
+ d.className="bubble "+who;
+ d.textContent=text;
+ log.appendChild(d);
+ log.scrollTop=log.scrollHeight;
+ if(saveIt)save();
+ return d;
+}
 
-  function addMessage(who, text) {
-    const item = document.createElement("div");
-    item.className = "jarvis-ai-message";
-    item.textContent = who + ": " + text;
-    messages.appendChild(item);
-    messages.scrollTop = messages.scrollHeight;
-    return item;
-  }
+function speak(text){
+ if(!("speechSynthesis" in window))return;
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="pt-BR";
+ u.rate=Number($("rate").value);
+ const voices=speechSynthesis.getVoices();
+ const chosen=voices[Number($("voice").value)];
+ if(chosen)u.voice=chosen;
+ speechSynthesis.speak(u);
+}
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const message = input.value.trim();
-    if (!message) return;
+function refreshVoices(){
+ if(!("speechSynthesis" in window))return;
+ const sel=$("voice"),old=sel.value;
+ const voices=speechSynthesis.getVoices();
+ sel.innerHTML="";
+ const pt=voices.map((v,i)=>({v,i})).filter(x=>x.v.lang.toLowerCase().startsWith("pt"));
+ const arr=pt.length?pt:voices.map((v,i)=>({v,i}));
+ arr.forEach(x=>sel.add(new Option(x.v.name+" ("+x.v.lang+")",String(x.i))));
+ if(!arr.length)sel.add(new Option("Voz padrão",""));
+ if([...sel.options].some(o=>o.value===old))sel.value=old;
+}
 
-    input.value = "";
-    addMessage("Você", message);
-    history.push({ role: "user", content: message });
+function openPage(url){window.open(url,"_blank","noopener");}
+function searchWeb(q){openPage("https://www.google.com/search?q="+encodeURIComponent(q));}
 
-    send.disabled = true;
-    send.textContent = "...";
-    const waiting = addMessage("JARVIS", "Pensando...");
+function localReply(text,voice=true){
+ bubble(text,"jarvis");
+ setStatus("Resposta pronta.");
+ if(voice)speak(text);
+}
 
-    try {
-      const response = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message,
-          history: history.slice(-9, -1)
-        })
-      });
+async function askAI(message){
+ const waiting=bubble("Processando solicitação...","jarvis");
+ setStatus("Conectando à inteligência artificial...");
+ busy=true;send.disabled=true;send.textContent="...";
+ try{
+ const response=await fetch(API,{
+ method:"POST",
+ headers:{"Content-Type":"application/json"},
+ body:JSON.stringify({message,history:history.slice(-10)})
+ });
+ const data=await response.json();
+ if(!response.ok||!data.reply)throw new Error(data.error||"Falha na conexão.");
+ waiting.textContent=data.reply;
+ history.push({role:"user",content:message},{role:"assistant",content:data.reply});
+ history=history.slice(-20);
+ save();
+ setStatus("Resposta recebida.");
+ speak(data.reply);
+ }catch(e){
+ waiting.textContent="Não consegui conectar à IA neste momento. Verifique a conexão e tente novamente.";
+ setStatus("Falha ao conectar. Tente novamente.");
+ }finally{
+ busy=false;send.disabled=false;send.textContent="Enviar";
+ log.scrollTop=log.scrollHeight;
+ }
+}
 
-      const data = await response.json();
-      if (!response.ok || !data.reply) {
-        throw new Error(data.error || "Erro ao consultar a IA.");
-      }
+async function handle(raw){
+ const t=raw.trim();
+ if(!t||busy)return;
+ bubble(t,"user");
+ input.value="";
+ const s=t.toLocaleLowerCase("pt-BR");
 
-      waiting.textContent = "JARVIS: " + data.reply;
+ if(/\b(ajuda|comandos|o que você faz)\b/.test(s)){
+ localReply("Estou conectado à IA e também posso executar comandos locais. Experimente pedir as horas, a data, pesquisar um assunto ou abrir YouTube, Google, Wikipédia, Spotify e WhatsApp Web.");
+ return;
+ }
+ if(/\b(que horas|hora agora|horas são)\b/.test(s)){
+ localReply("Agora são "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+".");
+ return;
+ }
+ if(/\b(que dia|data de hoje|data é hoje)\b/.test(s)){
+ localReply("Hoje é "+new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+".");
+ return;
+ }
+ if(/\b(pesquisar|pesquisa|procure|buscar|busque)\b/.test(s)){
+ const q=t.replace(/^(jarvis[, ]*)?(pesquisar|pesquisa|procure|buscar|busque)( por| sobre)?/i,"").trim();
+ if(!q){localReply("Diga o assunto que devo pesquisar.");return;}
+ localReply("Abrindo uma pesquisa sobre "+q+".");
+ searchWeb(q);return;
+ }
+ if(/\b(abrir|abre)\b/.test(s)){
+ let url="";
+ if(s.includes("youtube"))url="https://m.youtube.com";
+ else if(s.includes("google"))url="https://www.google.com";
+ else if(s.includes("wikipedia"))url="https://pt.wikipedia.org";
+ else if(s.includes("spotify"))url="https://open.spotify.com";
+ else if(s.includes("whatsapp"))url="https://web.whatsapp.com";
+ if(url){localReply("Abrindo a página solicitada.");openPage(url);return;}
+ }
+ if(/\b(parar voz|pare de falar|silêncio)\b/.test(s)){
+ if("speechSynthesis"in window)speechSynthesis.cancel();
+ localReply("Voz interrompida.",false);return;
+ }
+ await askAI(t);
+}
 
-const fala = new SpeechSynthesisUtterance(data.reply);
-fala.lang = "pt-BR";
-fala.rate = 1;
-speechSynthesis.speak(fala);
-      history.push({ role: "assistant", content: data.reply });
-    } catch (error) {
-      waiting.textContent =
-        "JARVIS: Não consegui conectar à IA. " + error.message;
-    } finally {
-      send.disabled = false;
-      send.textContent = "Enviar";
-      messages.scrollTop = messages.scrollHeight;
-    }
-  });
+form.addEventListener("submit",e=>{
+ e.preventDefault();
+ handle(input.value);
+});
+if("speechSynthesis"in window){
+ refreshVoices();
+ speechSynthesis.onvoiceschanged=refreshVoices;
+}
+
+$("listen").addEventListener("click",()=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){setStatus("Reconhecimento de voz indisponível. Use o campo de texto ou tente no Chrome.");return;}
+ if(recognition){try{recognition.stop();}catch(e){}}
+ recognition=new SR();
+ recognition.lang="pt-BR";
+ recognition.interimResults=false;
+ recognition.maxAlternatives=1;
+ recognition.onstart=()=>setStatus("Estou ouvindo. Fale agora...");
+ recognition.onresult=e=>handle(e.results[0][0].transcript);
+ recognition.onerror=e=>setStatus("Erro no microfone: "+e.error+". Verifique as permissões.");
+ recognition.onend=()=>{if(status.textContent==="Estou ouvindo. Fale agora...")setStatus("Escuta encerrada.");};
+ try{recognition.start();}catch(e){setStatus("Não consegui iniciar o microfone.");}
+});
+
+$("stop").addEventListener("click",()=>{
+ if("speechSynthesis"in window)speechSynthesis.cancel();
+ if(recognition)try{recognition.stop();}catch(e){}
+ setStatus("Voz interrompida.");
+});
+
+$("search").addEventListener("click",()=>{
+ const q=prompt("O que devo pesquisar?");
+ if(q&&q.trim()){
+ bubble("Pesquisar: "+q,"user");
+ localReply("Abrindo uma pesquisa sobre "+q+".");
+ searchWeb(q.trim());
+ }
+});
+
+$("clear").addEventListener("click",()=>{
+ if(confirm("Apagar o histórico desta conversa?")){
+ log.innerHTML="";
+ history=[];
+ localStorage.removeItem("jarvis-history-v1");
+ bubble("Conversa limpa. Sistema pronto.","jarvis");
+ setStatus("Histórico apagado.");
+ }
+});
+
+try{
+ const data=JSON.parse(localStorage.getItem("jarvis-history-v1")||"[]");
+ data.forEach(x=>bubble(x.text,x.who,false));
+}catch(e){}
+if(!log.children.length){
+ bubble("Sistema online. Olá! Sou o Jarvis. Pode conversar comigo por texto ou voz.","jarvis");
+ save();
+}
 })();
 </script>
- 
 </body>
 </html>
+
+  
+      
